@@ -1,0 +1,20 @@
+export const media: Record<string,{file:string;alt:string;product?:boolean}>={
+'/tehnologija/':{file:'samsung-e-paper-tanak-dizajn.webp',alt:'Tanak profil Samsung Color E-Paper uređaja'},
+'/tehnologija/elektronski-papir/':{file:'samsung-e-paper-32-incha-pejzaz.webp',alt:'Reflektivni ekran Samsung Color E-Paper sa statičnom slikom u boji'},
+'/proizvodi/':{file:'samsung-e-paper-knjizara-13-incha.webp',alt:'Kompaktni Samsung e-paper uređaj na prodajnom stolu u knjižari'},
+'/proizvodi/samsung-color-e-paper/':{file:'samsung-e-paper-32-incha-poster.webp',alt:'Samsung Color E-Paper digitalni poster',product:true},
+'/proizvodi/samsung-color-e-paper/13-incha/':{file:'samsung-color-e-paper-13-em13dx.webp',alt:'Samsung Color E-Paper EM13DX 13,3 inča',product:true},
+'/proizvodi/samsung-color-e-paper/32-incha/':{file:'samsung-color-e-paper-32-em32dx-a.webp',alt:'Samsung Color E-Paper EM32DX-A 31,5 inča',product:true},
+'/softver/':{file:'samsung-e-paper-app-upravljanje.webp',alt:'Samsung E-Paper aplikacija i promena sadržaja na uređaju'},
+'/softver/samsung-vxt/':{file:'samsung-vxt-upravljanje-sadrzajem.webp',alt:'Samsung VXT interfejs za upravljanje digitalnim sadržajem'},
+'/resenja/':{file:'samsung-e-paper-kozmetika-13-incha.webp',alt:'Samsung e-paper uređaj sa ponudom u prodavnici kozmetike'},
+'/resenja/digitalni-cenovnici/':{file:'samsung-e-paper-digitalni-cenovnici.webp',alt:'Digitalni cenovnik Samsung Color E-Paper uz sveže proizvode u prodavnici'},
+'/resenja/digitalni-meniji/':{file:'samsung-e-paper-kafe-digitalni-meni.webp',alt:'Digitalni meni na Samsung e-paper uređaju u ugostiteljskom prostoru'},
+'/resenja/digitalni-posteri-za-izlog/':{file:'samsung-e-paper-prodajni-prostor.webp',alt:'Digitalni Samsung poster u zatvorenom prodajnom prostoru'},
+'/industrije/':{file:'samsung-e-paper-poslovni-prostor.webp',alt:'Samsung elektronski poster u poslovnom prostoru'},
+'/industrije/maloprodaja/':{file:'samsung-e-paper-maloprodaja-13-incha.webp',alt:'Samsung Color E-Paper sa promotivnom ponudom u supermarketu'},
+'/industrije/banke/':{file:'samsung-e-paper-informacije-na-salteru.webp',alt:'Samsung e-paper informativni uređaj na šalteru'},
+'/industrije/restorani/':{file:'samsung-e-paper-restoran-digitalni-posteri.webp',alt:'Samsung e-paper posteri sa menijem i ponudom u restoranu'},
+'/industrije/hoteli/':{file:'samsung-e-paper-hotel.webp',alt:'Samsung digitalni posteri sa informacijama za goste hotela'},
+'/industrije/apoteke/':{file:'samsung-e-paper-zdravstvo.webp',alt:'Samsung e-paper informativni poster u prostoru zdravstvene namene'}
+};

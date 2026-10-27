@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import CTA from '../components/CTA.astro';
+import ProductCards from '../components/ProductCards.astro';
+import pages from '../data/pages.json';
+import {routes,crumbs} from '../data/site';
+import {media} from '../data/media';
+import assets from '../data/assets.json';
+export function getStaticPaths(){return Object.entries(pages).filter(([path])=>path!=='/'&&path!=='/kontakt/').map(([path,page])=>({params:{slug:path.slice(1,-1)},props:{path,page}}));}
+const {path,page}=Astro.props;
+const visual=media[path];
+const asset=assets.find(a=>a.file===visual.file);
+const childRoutes=Object.keys(routes).filter(p=>p!==path&&p.startsWith(path)&&p.slice(path.length).split('/').filter(Boolean).length===1);
+const isHub=childRoutes.length>0;
+const isProduct=path.endsWith('/13-incha/')||path.endsWith('/32-incha/');
+const small=path.endsWith('/13-incha/');
+const model=small?'EM13DX':'EM32DX-A';
+const product=isProduct?{name:'Samsung Color E-Paper '+(small?'13':'32')+' inča',model,sku:model,description:page.metaDescription,manufacturer:{'@type':'Organization',name:'Samsung Electronics'}}:undefined;
+const related=page.relatedroutes||[];
+const specs=small?[['Model','EM13DX'],['Dijagonala ekrana','13,3 inča (komercijalni format 13″)'],['Rezolucija','1600 × 1200 piksela'],['Dimenzije (Š × V × D)','305,2 × 237,6 × 17,9 mm'],['Masa sa baterijom','0,9 kg'],['VESA standard','100 × 100 mm'],['Baterija','Li-ion, 4600 mAh'],['Orijentacija','Uspravno ili položeno']]:[['Model','EM32DX-A'],['Dijagonala ekrana','31,5 inča (komercijalni format 32″)'],['Rezolucija','2560 × 1440 piksela'],['Dimenzije (Š × V × D)','725,1 × 420,5 × 17,9 mm'],['Masa sa baterijom','2,5 kg'],['VESA standard','200 × 200 mm'],['Baterija','Li-ion, 4600 mAh'],['Orijentacija','Uspravno ili položeno']];
+---
+<Base title={page.title} description={page.metaDescription} path={path} image={'/images/'+visual.file} type={isHub?'CollectionPage':'WebPage'} product={product}>
+<div class="container"><ol class="breadcrumbs" aria-label="Putanja stranice">{crumbs(path).map((c,i)=><li>{i>0&&<span aria-hidden="true">/</span>}{c.path===path?<span aria-current="page">{c.label}</span>:<a href={c.path}>{c.label}</a>}</li>)}</ol></div>
+<section class="page-hero"><div class="container page-hero-grid"><div><span class="eyebrow">{page.eyebrow}</span><h1>{page.headline}</h1><p>{page.intro}</p><div class="hero-actions"><a class="button" href="/kontakt/">Zatražite prezentaciju <span aria-hidden="true">↗</span></a><a class="text-link" href="#detalji">Saznajte više <span aria-hidden="true">↓</span></a></div></div><div><div class:list={['page-visual',{'product-shot':visual.product,'compact-device':small}]}><img src={'/images/'+visual.file} width={asset?.width} height={asset?.height} alt={visual.alt} fetchpriority="high"/></div><p class="image-caption">Samsung prikaz proizvoda i ilustracija moguće primene.</p></div></div></section>
+<div class="container"><div class="benefits">{page.benefits.map((benefit:string,i:number)=><div><span>0{i+1}</span>{benefit}</div>)}</div>
+{isHub&&path!=='/proizvodi/samsung-color-e-paper/'&&<div class="hub-links">{childRoutes.map(p=><a class="hub-link" href={p}><h2>{routes[p]} <span aria-hidden="true">↗</span></h2><p>{pages[p as keyof typeof pages]?.intro}</p><span class="text-link">Istražite detalje <span aria-hidden="true">→</span></span></a>)}</div>}
+</div>
+{path==='/proizvodi/samsung-color-e-paper/'&&<section class="section"><div class="container"><ProductCards/><div class="table-scroll"><table class="spec-table"><caption class="fineprint">Poređenje dva dostupna formata Samsung Color E-Paper</caption><thead><tr><th scope="col">Karakteristika</th><th scope="col">EM13DX · 13″</th><th scope="col">EM32DX-A · 32″</th></tr></thead><tbody><tr><th scope="row">Tehnička dijagonala</th><td>13,3 inča</td><td>31,5 inča</td></tr><tr><th scope="row">Rezolucija</th><td>1600 × 1200</td><td>2560 × 1440</td></tr><tr><th scope="row">Masa sa baterijom</th><td>0,9 kg</td><td>2,5 kg</td></tr><tr><th scope="row">VESA standard</th><td>100 × 100 mm</td><td>200 × 200 mm</td></tr><tr><th scope="row">Tipična namena</th><td>Pult, polica, kraće informacije</td><td>Poster, meni, istaknuta ponuda</td></tr></tbody></table></div></div></section>}
+<section class="section" id="detalji"><div class="container content-grid"><div>
+{page.sections.map((section:{heading:string;body:string[]},i:number)=><section class="article-section" id={'tema-'+i}><h2>{section.heading}</h2>{section.body.map(paragraph=><p>{paragraph}</p>)}</section>)}
+{isProduct&&<section class="article-section" id="specifikacije"><h2>Tehnički detalji modela {model}</h2><table class="spec-table"><tbody>{specs.map(([label,value])=><tr><th scope="row">{label}</th><td>{value}</td></tr>)}</tbody></table><p class="fineprint">Namenjen unutrašnjoj upotrebi, na temperaturi 0–40 °C. Podržani formati slike: JPEG, JPG, PNG i BMP. Nije namenjen reprodukciji videa. VESA standard ne podrazumeva da je zidni nosač uključen; opremu za postavljanje definišemo u ponudi.</p></section>}
+</div><aside><div class="side-panel"><span class="eyebrow">Vaš sledeći korak</span><h2>Odaberimo rešenje zajedno.</h2><p>Pošaljite nam namenu, broj uređaja i lokacije. Pripremićemo predlog za vaše poslovanje.</p><a class="button" href="/kontakt/">Zatražite B2B ponudu <span aria-hidden="true">↗</span></a><ul><li>Net Planet DOO, Beograd</li><li>Nabavka po porudžbini</li><li>Cena i uslovi prema projektu</li></ul></div><nav class="toc" aria-label="Sadržaj stranice">{page.sections.map((s:{heading:string},i:number)=><a href={'#tema-'+i}>{s.heading}</a>)}{isProduct&&<a href="#specifikacije">Tehnički detalji</a>}</nav></aside></div></section>
+{page.faq?.length>0&&<section class="section paper-white"><div class="container"><div class="center"><span class="eyebrow">Dobro je znati</span><h2>Vaša pitanja.<br/><span class="serif">Konkretni odgovori.</span></h2></div><div class="faq">{page.faq.map((f:{question:string;answer:string})=><details><summary>{f.question}</summary><p>{f.answer}</p></details>)}</div></div></section>}
+{related.length>0&&<section class="section"><div class="container"><div class="section-head"><div><span class="eyebrow">Povežite celu sliku</span><h2>Nastavite istraživanje.</h2></div></div><div class="related-grid">{related.map((p:string)=><a class="related-link" href={p}>{routes[p]}<span aria-hidden="true">↗</span></a>)}</div></div></section>}
+<CTA/>
+</Base>

@@ -1,46 +1,48 @@
-# Astro Starter Kit: Basics
+# epaper.rs
+
+Static Astro website for the existing Cloudflare Worker `epaper-sajt`.
+
+## Local development
+
+Use Node.js 24 (see `.nvmrc`).
 
 ```sh
-npm create astro@latest -- --template basics
+npm ci
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+On Windows PowerShell, use `npm.cmd` / `npx.cmd` if needed.
 
-## 🚀 Project Structure
+## Validation
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```sh
+npm run check
+npm run build
+npm test
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+The build generates `dist/`. Generated output and `node_modules/` are not committed.
 
-## 🧞 Commands
+Optional browser tests:
 
-All commands are run from the root of the project, from a terminal:
+```sh
+npx playwright install chromium
+npm run preview -- --port 4321
+# In another terminal:
+npm run test:browser
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Existing Cloudflare deployment
 
-## 👀 Want to learn more?
+- Repository: `VladiDujmo/epaper-sajt`
+- Production branch: `main`
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
+- Existing Worker: `epaper-sajt`
+- Worker URL: https://epaper-sajt.vladimirxdujmovic.workers.dev
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+`wrangler.jsonc` serves `dist/` as static assets with trailing slashes and a custom 404 page. It preserves the existing compatibility date, compatibility flag, and logging settings. No DNS or custom domain is configured here. Canonical SEO URLs remain on the intended domain `https://epaper.rs`.
+
+The contact form prepares a draft in the visitor's email application; it does not send messages automatically. No email backend, analytics, or new external service is configured.
+
+Private research records and source documents are not included in this repository.

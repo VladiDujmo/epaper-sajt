@@ -1,0 +1,86 @@
+---
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/newsreader';
+import '../styles/global.css';
+import { site, routes, nav, crumbs, organization } from '../data/site';
+interface Props {title:string; description:string; path?:string; image?:string; type?:string; noindex?:boolean; product?:Record<string,unknown>}
+const {title,description,path=Astro.url.pathname,image='/images/samsung-e-paper-knjizara-13-incha.webp',type='WebPage',noindex=false,product}=Astro.props;
+const canonical=site.url+path;
+const breadcrumb=crumbs(path);
+const schema={'@context':'https://schema.org','@graph':[
+organization, {'@type':'WebSite','@id':site.url+'/#website',url:site.url,name:site.name,inLanguage:'sr-Latn',publisher:{'@id':site.url+'/#organization'}},
+{'@type':type,'@id':canonical+'#webpage',url:canonical,name:title,description,inLanguage:'sr-Latn',isPartOf:{'@id':site.url+'/#website'},about:product?{'@id':canonical+'#product'}:undefined},
+...(path!=='/'?[{'@type':'BreadcrumbList',itemListElement:breadcrumb.map((c,i)=>({'@type':'ListItem',position:i+1,name:c.label,item:site.url+c.path}))}]:[]),
+...(product?[{'@type':'Product','@id':canonical+'#product',...product,brand:{'@type':'Brand',name:'Samsung'},image:site.url+image,url:canonical}]:[])]};
+---
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>{title}</title><meta name="description" content={description}/><link rel="canonical" href={canonical}/>
+{noindex&&<meta name="robots" content="noindex,follow"/>}
+<meta name="theme-color" content="#183e35"/><link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<meta property="og:type" content="website"/><meta property="og:locale" content="sr_RS"/><meta property="og:site_name" content="epaper.rs"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:image" content={site.url+image}/><meta name="twitter:card" content="summary_large_image"/>
+<script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g,'\\u003c')}/>
+</head>
+<body>
+<a class="skip-link" href="#main">Preskoči na sadržaj</a>
+<div class="utility"><div class="container"><span>Samsung Color E-Paper za poslovne prostore</span><a href="mailto:esl@netplanet.rs">Net Planet DOO · Beograd <span aria-hidden="true">↗</span></a></div></div>
+<header class="header"><div class="container header-inner">
+<a class="logo" href="/" aria-label="epaper.rs — početna"><span class="logo-icon" aria-hidden="true"><i></i><i></i><i></i></span>epaper<span class="logo-domain">.rs</span></a>
+<button class="menu-button" aria-expanded="false" aria-controls="site-nav" aria-label="Otvori navigaciju"><span></span><span></span></button>
+<nav id="site-nav" aria-label="Glavna navigacija">{nav.map((p,i)=><div class="nav-group"><div class="nav-group-heading"><a class="nav-hub" href={p} aria-current={path===p?'page':path.startsWith(p)?'true':undefined}>{routes[p]}</a><button class="submenu-toggle" type="button" aria-expanded="false" aria-controls={'nav-submenu-'+i} aria-label={'Prikaži podstranice: '+routes[p]}><svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><path d="m2 4 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div><ul class="nav-submenu" id={'nav-submenu-'+i} hidden>{Object.entries(routes).filter(([child])=>child!==p&&child.startsWith(p)).map(([child,label])=><li><a href={child} aria-current={path===child?'page':undefined}>{label}<span aria-hidden="true">↗</span></a></li>)}</ul></div>)}<a class="button button-small" href="/kontakt/">Zatražite ponudu <span aria-hidden="true">↗</span></a></nav>
+</div></header>
+<main id="main"><slot/></main>
+<footer class="footer"><div class="container">
+<div class="footer-top"><div><a class="logo" href="/">epaper<span class="logo-domain">.rs</span></a><p>Nova stranica poslovne komunikacije.<br/>Elektronski papir. Stvarne mogućnosti.</p><a class="footer-mail" href="mailto:esl@netplanet.rs">esl@netplanet.rs ↗</a></div>
+<div><h2>Istražite</h2>{nav.map(p=><a href={p}>{routes[p]}</a>)}</div>
+<div><h2>Samsung Color E-Paper</h2><a href="/proizvodi/samsung-color-e-paper/13-incha/">Kompaktni format 13″</a><a href="/proizvodi/samsung-color-e-paper/32-incha/">Veliki format 32″</a><a href="/softver/samsung-vxt/">Samsung VXT</a><a href="/kontakt/">Prezentacija i ponuda</a></div>
+<div><h2>Za vaše poslovanje</h2><p>Net Planet DOO, Beograd<br/>Prodaja pravnim licima.</p><p>Srbija · Bosna i Hercegovina<br/>Crna Gora · Severna Makedonija</p><p class="footer-note">Dostupnost, rok i uslove isporuke potvrđujemo u ponudi.</p></div></div>
+<div class="footer-bottom"><span>© {new Date().getFullYear()} Net Planet DOO · epaper.rs</span><span>Samsung je žig kompanije Samsung Electronics.</span><a href="/kontakt/#privatnost">Privatnost upita</a><a href="/sitemap.xml">Mapa sajta</a></div>
+</div></footer>
+<script>
+const menuButton=document.querySelector<HTMLButtonElement>('.menu-button');
+const navigation=document.querySelector<HTMLElement>('#site-nav');
+const groups=Array.from(document.querySelectorAll<HTMLElement>('.nav-group'));
+function setDisclosure(group:HTMLElement,open:boolean){
+ const trigger=group.querySelector<HTMLButtonElement>('.submenu-toggle');
+ const panel=group.querySelector<HTMLElement>('.nav-submenu');
+ trigger?.setAttribute('aria-expanded',String(open));
+ if(panel)panel.hidden=!open;
+}
+function closeDisclosures(){groups.forEach(group=>setDisclosure(group,false));}
+function closeMenu(){closeDisclosures();menuButton?.setAttribute('aria-expanded','false');navigation?.classList.remove('is-open');}
+function openDisclosure(group:HTMLElement){closeDisclosures();setDisclosure(group,true);}
+menuButton?.addEventListener('click',()=>{
+ const open=menuButton.getAttribute('aria-expanded')!=='true';
+ if(!open){closeMenu();return;}
+ menuButton.setAttribute('aria-expanded','true');navigation?.classList.add('is-open');
+});
+groups.forEach(group=>{
+ const trigger=group.querySelector<HTMLButtonElement>('.submenu-toggle');
+ trigger?.addEventListener('click',()=>{const open=trigger.getAttribute('aria-expanded')!=='true';closeDisclosures();setDisclosure(group,open);});
+ group.addEventListener('keydown',event=>{
+  const links=Array.from(group.querySelectorAll<HTMLAnchorElement>('.nav-submenu a'));
+  if(event.target===trigger&&(event.key==='ArrowDown'||event.key==='ArrowUp')){
+   event.preventDefault();openDisclosure(group);(event.key==='ArrowDown'?links[0]:links.at(-1))?.focus();
+  }else if(trigger?.getAttribute('aria-expanded')==='true'){
+   const index=links.indexOf(document.activeElement as HTMLAnchorElement);
+   if(index>=0&&['ArrowDown','ArrowUp','Home','End'].includes(event.key)){
+    event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?links.length-1:(index+(event.key==='ArrowDown'?1:-1)+links.length)%links.length;links[next]?.focus();
+   }
+  }
+ });
+ group.addEventListener('focusout',event=>{if(event.relatedTarget instanceof Node&&!group.contains(event.relatedTarget))setDisclosure(group,false);});
+});
+document.addEventListener('keydown',event=>{
+ if(event.key!=='Escape')return;
+ const openGroup=groups.find(group=>group.querySelector('.submenu-toggle')?.getAttribute('aria-expanded')==='true');
+ if(openGroup){event.preventDefault();setDisclosure(openGroup,false);openGroup.querySelector<HTMLButtonElement>('.submenu-toggle')?.focus();}
+ else if(menuButton?.getAttribute('aria-expanded')==='true'){event.preventDefault();closeMenu();menuButton.focus();}
+});
+document.addEventListener('click',event=>{if(event.target instanceof Node&&!document.querySelector('.header')?.contains(event.target))closeMenu();});
+navigation?.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
+window.matchMedia('(min-width: 1001px)').addEventListener('change',closeMenu);
+</script>
+</body></html>

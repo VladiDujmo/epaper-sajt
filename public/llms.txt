@@ -1,0 +1,39 @@
+# epaper.rs
+
+> Samsung Color E-Paper B2B rešenja. Sajt kompanije Net Planet DOO, Beograd, na srpskom jeziku (latinica).
+
+## O poslovanju
+- Prodaja pravnim licima u Srbiji, Bosni i Hercegovini, Crnoj Gori i Severnoj Makedoniji.
+- Cena, dostupnost, rok isporuke, oprema i servisni uslovi potvrđuju se u pojedinačnoj ponudi.
+- Kontakt: esl@netplanet.rs.
+
+## Glavne stranice
+- [Početna](https://epaper.rs/): Pregled ponude i primene.
+- [Tehnologija](https://epaper.rs/tehnologija/): Osnove tehnologije i izbor prikaza.
+- [Elektronski papir](https://epaper.rs/tehnologija/elektronski-papir/): Kako e-paper radi i koja su ograničenja.
+- [Proizvodi](https://epaper.rs/proizvodi/): Pregled uređaja.
+- [Samsung Color E-Paper](https://epaper.rs/proizvodi/samsung-color-e-paper/): Poređenje modela.
+- [Samsung Color E-Paper 13 inča](https://epaper.rs/proizvodi/samsung-color-e-paper/13-incha/): EM13DX, dijagonala 13,3 inča.
+- [Samsung Color E-Paper 32 inča](https://epaper.rs/proizvodi/samsung-color-e-paper/32-incha/): EM32DX-A, dijagonala 31,5 inča.
+- [Softver](https://epaper.rs/softver/): Lokalna aplikacija i centralno upravljanje.
+- [Samsung VXT](https://epaper.rs/softver/samsung-vxt/): Posebno licencirana platforma.
+- [Rešenja](https://epaper.rs/resenja/): Primene elektronskog papira.
+- [Digitalni cenovnici](https://epaper.rs/resenja/digitalni-cenovnici/)
+- [Digitalni meniji](https://epaper.rs/resenja/digitalni-meniji/)
+- [Digitalni posteri za izlog](https://epaper.rs/resenja/digitalni-posteri-za-izlog/): Unutrašnje postavljanje uz procenu uslova.
+- [Industrije](https://epaper.rs/industrije/)
+- [Maloprodaja](https://epaper.rs/industrije/maloprodaja/)
+- [Banke](https://epaper.rs/industrije/banke/)
+- [Restorani](https://epaper.rs/industrije/restorani/)
+- [Hoteli](https://epaper.rs/industrije/hoteli/)
+- [Apoteke](https://epaper.rs/industrije/apoteke/)
+- [Kontakt](https://epaper.rs/kontakt/): Prezentacija, preporuka i B2B ponuda.
+
+## Važna ograničenja
+Uređaji prikazuju statične slike, ne video. Namenjeni su unutrašnjoj upotrebi. Zadržavanje slike ne zahteva stalno napajanje samog prikaza, ali ažuriranje sadržaja, komunikacija i druge funkcije troše energiju. Trajanje baterije zavisi od podešavanja i upotrebe. Samsung VXT zahteva zasebnu licencu. Ilustracije proizvođača nisu reference realizovanih projekata Net Planet DOO.
+
+## Mašinski čitljivi izvori
+- [Sitemap XML](https://epaper.rs/sitemap.xml)
+- [Podaci o organizaciji](https://epaper.rs/organization.jsonld)
+
+Ovaj fajl služi kao sažet vodič kroz javni sadržaj sajta. Ne predstavlja garanciju indeksiranja, citiranja ili rangiranja u sistemima veštačke inteligencije.
