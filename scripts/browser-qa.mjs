@@ -9,7 +9,7 @@ for(const size of [{name:'desktop',width:1440,height:1000},{name:'mobile',width:
  const page=await browser.newPage({viewport:{width:size.width,height:size.height},deviceScaleFactor:1});
  await isolateHubSpot(page);
  page.on('pageerror',error=>report.errors.push(String(error)));
- for(const route of Object.keys(pages)){
+ for(const route of [...Object.keys(pages),'/politika-privatnosti/']){
   const response=await page.goto(base+route,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
   const state=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth+1,images:[...document.images].filter(i=>!i.complete||i.naturalWidth===0).map(i=>i.src),h1:document.querySelector('h1')?.textContent}));
   if(response?.status()!==200||state.overflow||state.images.length)report.errors.push({route,viewport:size.name,status:response?.status(),...state});
@@ -17,7 +17,7 @@ for(const size of [{name:'desktop',width:1440,height:1000},{name:'mobile',width:
   const axe=await page.evaluate(async()=>await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}}));
   report.pages.push({route,viewport:size.name,status:response?.status(),overflow:state.overflow,axeViolations:axe.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>n.target)}))});
   if(axe.violations.length)report.errors.push({route,viewport:size.name,axe:axe.violations.map(v=>v.id)});
-  if(['/','/proizvodi/samsung-color-e-paper/13-incha/','/resenja/digitalni-meniji/','/kontakt/'].includes(route))await page.screenshot({path:output+'/'+size.name+'-'+(route==='/'?'home':route.split('/').filter(Boolean).at(-1))+'.png',fullPage:true});
+  if(['/','/proizvodi/samsung-color-e-paper/13-incha/','/resenja/digitalni-meniji/','/kontakt/','/politika-privatnosti/'].includes(route))await page.screenshot({path:output+'/'+size.name+'-'+(route==='/'?'home':route.split('/').filter(Boolean).at(-1))+'.png',fullPage:true});
  }
  await page.goto(base+'/');
  if(size.name==='mobile'){
