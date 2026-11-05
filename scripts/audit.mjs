@@ -49,6 +49,10 @@ assert(contact.includes('mailto:esl@netplanet.rs'),'Kontakt nema e-mail alternat
 const privacy=fs.readFileSync(path.join(root,'politika-privatnosti/index.html'),'utf8');
 assert(privacy.includes('id="privatnost"')&&privacy.includes('https://legal.hubspot.com/privacy-policy'),'Politika nema HubSpot privatnost');
 assert(privacy.includes('id="google-analytics"')&&privacy.includes('https://policies.google.com/privacy'),'Politika nema privatnost analitike');
+const analyticsDisclosure=privacy.match(/<section[^>]+id="google-analytics"[^>]*>([\s\S]*?)<\/section>/)?.[1]||'';
+assert((analyticsDisclosure.match(/<p\b/g)||[]).length===1,'GA obaveštenje mora biti sažeto u jedan pasus');
+assert(analyticsDisclosure.includes('Uz vašu saglasnost koristimo Google Analytics radi analize posećenosti i poboljšanja sajta.'),'GA nema odobreni sažeti tekst');
+assert(analyticsDisclosure.includes('mailto:esl@netplanet.rs'),'GA obaveštenje nema kontakt');
 assert(privacy.includes('id="vasa-prava"')&&privacy.includes('ispravci ili brisanju'),'Politika nema prava i kontakt');
 assert(!privacy.includes('id="hubspot-form"'),'Politika ne sme učitavati HubSpot formu');
 for(const route of expected){
