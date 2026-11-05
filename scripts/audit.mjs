@@ -15,6 +15,9 @@ for(const route of expected){
  assert((html.match(/<h1\b/g)||[]).length===1,route+' mora imati jedan H1');
  assert(html.includes('href="https://epaper.rs'+route+'"'),route+' canonical nije očekivan');
  assert(html.includes('lang="sr-Latn"'),route+' nedostaje jezik');
+ assert(html.includes('data-analytics-consent'),route+' nema izbor analitike');
+ assert(html.includes('data-analytics-settings'),route+' nema promenu izbora analitike');
+ assert(!/<script[^>]+src="https:\/\/www\.googletagmanager\.com/.test(html),route+' učitava Google pre pristanka');
  const navigation=html.match(/<nav id="site-nav"[^>]*>(.*?)<\/nav>/s)?.[1]||'';
  assert((navigation.match(/class="submenu-toggle"/g)||[]).length===5,route+' mora imati pet dugmadi za podmenije');
  assert((navigation.match(/class="nav-submenu"/g)||[]).length===5,route+' mora imati pet podmenija');
@@ -41,6 +44,7 @@ assert(!contact.includes('id="inquiry-form"')&&!contact.includes('id="draft-pane
 assert(contact.includes('https://legal.hubspot.com/privacy-policy'),'Kontakt nema HubSpot privatnost');
 assert(!contact.includes('samo u vašem pregledaču')&&!contact.includes('ne koristi analitičke ni marketinške kolačiće'),'Kontakt sadrži zastarele tvrdnje o privatnosti');
 assert(contact.includes('mailto:esl@netplanet.rs'),'Kontakt nema e-mail alternativu');
+assert(contact.includes('id="google-analytics"')&&contact.includes('https://policies.google.com/privacy'),'Kontakt nema privatnost analitike');
 const report={routes:expected.length,internalLinksChecked:internalLinks,imagesChecked:images,jsonLdBlocks:schemas,sitemapRoutes:locs.length,errors};
 console.log(JSON.stringify(report,null,2));if(errors.length)process.exit(1);
 
