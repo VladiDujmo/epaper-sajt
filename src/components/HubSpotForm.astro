@@ -1,0 +1,85 @@
+<section class="contact-form hubspot-contact" aria-labelledby="inquiry-heading">
+  <h2 id="inquiry-heading">Pošaljite upit.</h2>
+  <p>Popunite formu za prezentaciju, preporuku rešenja ili konkretnu ponudu.</p>
+  <p id="hubspot-status" class="status-message" role="status" aria-live="polite" hidden></p>
+  <div id="hubspot-form" aria-busy="false"></div>
+  <p class="form-notice">Formu obezbeđuje HubSpot. Pročitajte <a href="#privatnost"><u>informacije o privatnosti upita</u></a>.</p>
+  <p class="form-notice">Ako forma nije dostupna, pišite nam na <a href="mailto:esl@netplanet.rs"><u>esl@netplanet.rs</u></a>.</p>
+  <noscript><p>Za prikaz forme potreban je JavaScript. Upit možete poslati direktno na <a href="mailto:esl@netplanet.rs"><u>esl@netplanet.rs</u></a>.</p></noscript>
+</section>
+
+<script>
+  interface HubSpotOptions {
+    portalId: string;
+    formId: string;
+    region: string;
+    target: string;
+    onFormReady: () => void;
+  }
+
+  const hubspotWindow = window as typeof window & {
+    hbspt?: { forms: { create: (options: HubSpotOptions) => void } };
+  };
+  const target = document.querySelector<HTMLElement>('#hubspot-form');
+  const status = document.querySelector<HTMLElement>('#hubspot-status');
+
+  if (target && status && !target.dataset.initialized) {
+    target.dataset.initialized = 'true';
+    target.dataset.state = 'loading';
+    target.setAttribute('aria-busy', 'true');
+    status.hidden = false;
+    status.textContent = 'Naša kontakt forma se učitava…';
+
+    const showUnavailable = () => {
+      target.dataset.state = 'unavailable';
+      target.setAttribute('aria-busy', 'false');
+      status.hidden = false;
+      status.textContent = 'Forma trenutno nije dostupna. Osvežite stranicu ili nam pošaljite upit e-mailom.';
+    };
+    const timeout = window.setTimeout(showUnavailable, 15000);
+    const createForm = () => {
+      try {
+        if (!hubspotWindow.hbspt?.forms) throw new Error('HubSpot loader unavailable');
+        hubspotWindow.hbspt.forms.create({
+          portalId: '25754850',
+          formId: '64bc9124-5728-485c-bdf0-ba78b2261c29',
+          region: 'eu1',
+          target: '#hubspot-form',
+          onFormReady: () => {
+            window.clearTimeout(timeout);
+            target.dataset.state = 'ready';
+            target.setAttribute('aria-busy', 'false');
+            status.textContent = '';
+            status.hidden = true;
+          },
+        });
+      } catch {
+        window.clearTimeout(timeout);
+        showUnavailable();
+      }
+    };
+
+    if (hubspotWindow.hbspt?.forms) {
+      createForm();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://js-eu1.hsforms.net/forms/embed/v2.js';
+      script.type = 'text/javascript';
+      script.setAttribute('charset', 'utf-8');
+      script.async = true;
+      script.onload = createForm;
+      script.onerror = () => {
+        window.clearTimeout(timeout);
+        showUnavailable();
+      };
+      document.head.append(script);
+    }
+  }
+</script>
+
+<style>
+  .hubspot-contact { min-width: 0; }
+  #hubspot-form { width: 100%; min-width: 0; }
+  #hubspot-form:global(> iframe) { width: 100%; max-width: 100%; border: 0; }
+  .status-message[hidden] { display: none; }
+</style>

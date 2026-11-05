@@ -1,11 +1,13 @@
 import {chromium} from '@playwright/test';
 import fs from 'node:fs';
+import { isolateHubSpot } from './hubspot-fixture.mjs';
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),headless:true,args:['--no-sandbox']});
 const base=process.env.BASE_URL||'http://localhost:4321';
 const output=process.env.QA_OUTPUT||'qa';fs.mkdirSync(output,{recursive:true});
 const pages=JSON.parse(fs.readFileSync('src/data/pages.json','utf8'));const report={pages:[],interaction:[],errors:[]};
 for(const size of [{name:'desktop',width:1440,height:1000},{name:'mobile',width:390,height:844}]){
  const page=await browser.newPage({viewport:{width:size.width,height:size.height},deviceScaleFactor:1});
+ await isolateHubSpot(page);
  page.on('pageerror',error=>report.errors.push(String(error)));
  for(const route of Object.keys(pages)){
   const response=await page.goto(base+route,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
@@ -42,7 +44,14 @@ for(const size of [{name:'desktop',width:1440,height:1000},{name:'mobile',width:
  await page.goBack();await page.goForward();if(!page.url().endsWith('/13-incha/'))report.errors.push(size.name+' back/forward failed');
  report.interaction.push(size.name+' all five disclosures, Escape, keyboard arrows, End, outside click, subpage link and back/forward checked');
  await page.goto(base+'/resenja/digitalni-meniji/');const detail=page.locator('details').first();await detail.locator('summary').click();if(!(await detail.getAttribute('open'))&&await detail.getAttribute('open')!== '')report.errors.push('FAQ failed open');await detail.locator('summary').click();if(await detail.getAttribute('open')!==null)report.errors.push('FAQ failed close');report.interaction.push(size.name+' FAQ repeated toggle passed');
- await page.goto(base+'/kontakt/');await page.locator('#company').fill('Test d.o.o.');await page.locator('#email').fill('test@example.com');await page.locator('#phone').fill('+381 60 1234567');await page.locator('#message').fill('Test lokalnog nacrta.');await page.locator('button[type=submit]').click();if(!(await page.locator('#draft-panel').isVisible()))report.errors.push('Draft panel not visible');if(!(await page.locator('#draft').inputValue()).includes('Test d.o.o.'))report.errors.push('Draft missing input');if(!(await page.locator('#form-status').textContent()).includes('još nije poslat'))report.errors.push('Draft status misleading');report.interaction.push(size.name+' form local draft and honest not-sent status passed; no email sent');
+ await page.goto(base+'/kontakt/');
+ await page.waitForFunction(()=>document.querySelector('#hubspot-form')?.dataset.state==='ready');
+ const config=await page.evaluate(()=>window.__hubspotCalls);
+ if(config.length!==1||config[0].portalId!=='25754850'||config[0].formId!=='64bc9124-5728-485c-bdf0-ba78b2261c29'||config[0].region!=='eu1'||config[0].target!=='#hubspot-form')report.errors.push(size.name+' incorrect HubSpot configuration or duplicate mount');
+ if(await page.locator('#inquiry-form, #draft-panel').count())report.errors.push(size.name+' obsolete draft form remains');
+ if(await page.locator('#hubspot-status').isVisible())report.errors.push(size.name+' loading status not cleared');
+ report.interaction.push(size.name+' HubSpot configuration, single mount, loaded state and email fallback checked using a local fixture; no data submitted');
  await page.close();
 }
 await browser.close();fs.writeFileSync(output+'/browser-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify({pages:report.pages.length,interaction:report.interaction,errors:report.errors},null,2));if(report.errors.length)process.exit(1);
+

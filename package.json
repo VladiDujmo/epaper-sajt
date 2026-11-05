@@ -8,8 +8,9 @@
     "build": "astro build",
     "preview": "astro preview --host 0.0.0.0",
     "check": "astro check",
-    "test": "node scripts/audit.mjs",
-    "test:browser": "node scripts/browser-qa.mjs"
+    "test": "node scripts/audit.mjs && node scripts/hubspot-unit.mjs",
+    "test:browser": "node scripts/browser-qa.mjs",
+    "test:hubspot": "node scripts/hubspot-qa.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "5.3.0",

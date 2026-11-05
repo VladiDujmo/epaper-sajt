@@ -35,5 +35,12 @@ assert(!locs.some(u=>u.includes('/blog/')),'Blog ne sme biti u sitemapu');assert
 assert(fs.readFileSync(path.join(root,'robots.txt'),'utf8').includes('Sitemap: https://epaper.rs/sitemap.xml'),'robots nema sitemap');
 for(const f of ['organization.jsonld','llms.txt','404.html'])assert(fs.existsSync(path.join(root,f)),'Nedostaje '+f);
 try{JSON.parse(fs.readFileSync(path.join(root,'organization.jsonld'),'utf8'))}catch{errors.push('Neispravan organization.jsonld')}
+const contact=fs.readFileSync(path.join(root,'kontakt/index.html'),'utf8');
+assert(contact.includes('id="hubspot-form"'),'Kontakt nema HubSpot target');
+assert(!contact.includes('id="inquiry-form"')&&!contact.includes('id="draft-panel"'),'Kontakt sadrži staru formu');
+assert(contact.includes('https://legal.hubspot.com/privacy-policy'),'Kontakt nema HubSpot privatnost');
+assert(!contact.includes('samo u vašem pregledaču')&&!contact.includes('ne koristi analitičke ni marketinške kolačiće'),'Kontakt sadrži zastarele tvrdnje o privatnosti');
+assert(contact.includes('mailto:esl@netplanet.rs'),'Kontakt nema e-mail alternativu');
 const report={routes:expected.length,internalLinksChecked:internalLinks,imagesChecked:images,jsonLdBlocks:schemas,sitemapRoutes:locs.length,errors};
 console.log(JSON.stringify(report,null,2));if(errors.length)process.exit(1);
+
